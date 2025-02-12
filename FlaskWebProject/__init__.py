@@ -11,20 +11,6 @@ from flask_session import Session
 app = Flask(__name__)
 app.config.from_object(Config)
 # TODO: Add any logging levels and handlers with app.logger
-# Setting logging level to info
-app.logger.setLevel(logging.INFO)
-# Creating stream handler for logging
-stream_Handler = logging.StreamHandler()
-stream_Handler.setLevel(logging.INFO)
-# Adding handler to app.logger object
-app.logger.addHandler(stream_handler)
-
-# Log messages for different logging levels
-app.logger.info('Info level: No issue.')
-app.logger.warning('Warning level: Warning occurred.')
-app.logger.error('Error level: Error occurred.')
-app.logger.critical('Critical level: Critical error occurred.')
-
 Session(app)
 db = SQLAlchemy(app)
 login = LoginManager(app)
