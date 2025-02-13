@@ -14,10 +14,10 @@ app.config.from_object(Config)
 # Setting logging level to info
 app.logger.setLevel(logging.INFO)
 # Creating stream handler for logging
-stream_Handler = logging.StreamHandler()
-stream_Handler.setLevel(logging.INFO)
+streamHandler = logging.StreamHandler()
+streamHandler.setLevel(logging.INFO)
 # Adding handler to app.logger object
-app.logger.addHandler(stream_handler)
+app.logger.addHandler(streamHandler)
 
 # Log messages for different logging levels
 app.logger.info('Info level: No issue.')
