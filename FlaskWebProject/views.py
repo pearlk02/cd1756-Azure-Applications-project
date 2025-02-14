@@ -135,7 +135,7 @@ def _build_msal_app(cache=None, authority=None):
 
 def _build_auth_url(authority=None, scopes=None, state=None):
     # TODO: Return the full Auth Request URL with appropriate Redirect URI
-    return _build_msal_app(authority=authority).get_authorization_request_url(
-        scopes,
-        state=state,
-        redirect_uri=url_for('authorized', _external=True, _scheme='https'))
+    # return _build_msal_app(authority=authority).get_authorization_request_url(
+    #     scopes,
+    #     state=state,
+    #     redirect_uri=url_for('authorized', _external=True, _scheme='https'))
