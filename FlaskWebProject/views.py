@@ -66,10 +66,12 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
+            # Log message for warning level if invalid attempt
             app.logger.warning('Warning level: Warning occurred. Invalid username.')
             flash('Invalid username or password')
             return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
+        # Log message for info level if successful
         app.logger.info('Info level: No issue. Login successful.')
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
@@ -87,7 +89,7 @@ def authorized():
         return render_template("auth_error.html", result=request.args)
     if request.args.get('code'):
         cache = _load_cache()
-        # TODO: Acquire a token from a built msal app, along with the appropriate redirect URI
+        # Acquire a token from a built msal app
         result = _build_msal_app(cache=cache).acquire_token_by_authorization_code(
             request.args['code'],
             scopes=Config.SCOPE,
@@ -116,23 +118,25 @@ def logout():
     return redirect(url_for('login'))
 
 def _load_cache():
-    # TODO: Load the cache from `msal`, if it exists
+    # Load the cache from `msal`, if it exists
     cache = msal.SerializableTokenCache()
     if session.get('token_cache'):
         cache.deserialize(session['token_cache'])
     return cache
 
 def _save_cache(cache):
-    # TODO: Save the cache, if it has changed
+    # Save the cache, if it has changed
     if cache.has_state_changed:
         session['token_cache'] = cache.serialize()
 
 def _build_msal_app(cache=None, authority=None):
-    # TODO: Return a ConfidentialClientApplication
+    # Return a ConfidentialClientApplication
     return msal.ConfidentialClientApplication(
         Config.CLIENT_ID, authority=authority or Config.AUTHORITY,
         client_credential=Config.CLIENT_SECRET, token_cache=cache)
 
 def _build_auth_url(authority=None, scopes=None, state=None):
-    # TODO: Return the full Auth Request URL with appropriate Redirect URI
-    return _build_msal_app(authority=authority).get_authorization_request_url(scopes or [], state=state or str(uuid.uuid4()), redirect_uri=url_for('authorized', _external=True, _scheme='https'))
+    # Return the full Auth Request URL with appropriate Redirect URI
+    return _build_msal_app(authority=authority).get_authorization_request_url(
+        scopes or [], state=state or str(uuid.uuid4()), 
+        redirect_uri=url_for('authorized', _external=True, _scheme='https'))
